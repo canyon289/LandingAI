@@ -8,7 +8,7 @@ import os
 
 def load_image(img_filename):
     """Takes an image and loads it as a tensor"""
-    img = image.load_img(img_filename)
+    img = image.load_img(img_filename, grayscale=True, target_size=(270, 270))
     x = image.img_to_array(img)
     return np.expand_dims(x, axis=0)
 
@@ -34,6 +34,8 @@ def load_data(path):
             Two column vector for class prediction
     """
     img_files = os.listdir(path)
-    imgs = [load_image(os.path.join(path, img)) for img in img_files]
-    targets = np.array([class_label(img) for img in img_files])
+
+    # Load images and convert to 1 bit bitmap
+    imgs = np.vstack([load_image(os.path.join(path, img)) for img in img_files])/255
+    targets = [class_label(img) for img in img_files]
     return imgs, targets
