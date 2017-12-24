@@ -2,12 +2,22 @@
 Utility functions to be used when training the model
 """
 from keras.preprocessing import image
+import PIL
 import numpy as np
 import os
 
 
+def load_camera_image(img_filename):
+    """Loads a camera image"""
+    img = PIL.Image.open(img_filename, 'r')
+    bit_img = img.convert("1").resize((270, 270))
+    bit_img.save("convertedimg.bmp")
+    x = image.img_to_array(bit_img)
+    return np.expand_dims(x, axis=0)
+
+
 def load_image(img_filename):
-    """Takes an image and loads it as a tensor"""
+    """Takes an image and loads it as a tensor. If extension is """
     img = image.load_img(img_filename, grayscale=True, target_size=(270, 270))
     x = image.img_to_array(img)
     return np.expand_dims(x, axis=0)
