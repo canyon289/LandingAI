@@ -12,10 +12,10 @@ from PIL import Image, ImageFont, ImageDraw
 
 CHARACTERS = string.ascii_letters + "."
 FONT_DIR = os.path.join(os.path.dirname(__file__), "font")
-PARAMS_C = namedtuple("params", ["text_size", "rotation", "x", "y"])
+PARAMS_C = namedtuple("params", ["text_size", "rotation", "x", "y", 'size'])
 
 
-def random_params(scale=(95, 100), rotation=(-5, 5), text_x=(60, 100), text_y=(300, 350)):
+def random_params(scale=(95, 100), rotation=(-3, 3), text_x=(5, 50), text_y=(300, 350), size=(-5, 5)):
     """Generates random parameters for sample images
 
     Parameters
@@ -28,6 +28,8 @@ def random_params(scale=(95, 100), rotation=(-5, 5), text_x=(60, 100), text_y=(3
         Sets the x for the corner
     text_y : tuple
         Sets the y for the corner
+    size : tuple
+        Sets percentage scale resize
 
 
     Returns
@@ -36,9 +38,19 @@ def random_params(scale=(95, 100), rotation=(-5, 5), text_x=(60, 100), text_y=(3
         Returns named tuple for use in gen_image
     """
     values = []
-    for param_bounds in (scale, rotation, text_x, text_y):
-        values.append(choice(range(*param_bounds)))
+    for param_bounds in (scale, rotation, text_x, text_y, size):
+        value = choice(range(*param_bounds))
+        # Scale size parameter to a percentage
+        if param_bounds is size:
+            value /= 100
+
+        values.append(value)
     return PARAMS_C(*values)
+
+
+def resize_dims(size, scale):
+    """Takes image dimensions and returns a resized image"""
+    return [round(scale*dim) for dim in size]
 
 
 def gen_image(img_name, path, text, params, font="AllertaStencil-Regular.ttf"):
@@ -64,9 +76,13 @@ def gen_image(img_name, path, text, params, font="AllertaStencil-Regular.ttf"):
     fff = Image.new('RGBA', text_img.size, (255,) * 4)
     text_rotation = Image.composite(text_img, fff, text_img)
 
+    # Resize to better represent actual object
+    resize_base = 1.2
+    text_resized = text_rotation.resize(resize_dims(text_size, resize_base+params.size))
+
     # Paste onto image and save
-    base_img.paste(text_rotation, (params.x, params.y))
-    base_img.save(os.path.join(path, img_name))
+    base_img.paste(text_resized, (params.x, params.y))
+    base_img.convert(mode="1").save(os.path.join(path, img_name))
     return
 
 
