@@ -5,5 +5,5 @@ setup(
     version='0.1',
     author='Canyon',
     packages=['landingai'],
-    install_requires=['tensorflow', 'pillow', 'keras'],
+    install_requires=['tensorflow', 'pillow', 'keras', 'numpy'],
 )
