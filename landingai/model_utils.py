@@ -11,7 +11,6 @@ def load_camera_image(img_filename):
     """Loads a camera image"""
     img = PIL.Image.open(img_filename, 'r')
     bit_img = img.convert("1").resize((270, 270))
-    bit_img.save("convertedimg.bmp")
     x = image.img_to_array(bit_img)
     return np.expand_dims(x, axis=0)
 
@@ -49,3 +48,4 @@ def load_data(path):
     imgs = np.vstack([load_image(os.path.join(path, img)) for img in img_files])/255
     targets = [class_label(img) for img in img_files]
     return imgs, targets
+
