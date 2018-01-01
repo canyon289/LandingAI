@@ -15,7 +15,7 @@ FONT_DIR = os.path.join(os.path.dirname(__file__), "font")
 PARAMS_C = namedtuple("params", ["text_size", "rotation", "x", "y", 'size'])
 
 
-def random_params(scale=(95, 100), rotation=(-3, 3), text_x=(5, 50), text_y=(300, 350), size=(-5, 5)):
+def random_params(scale=(90, 100), rotation=(-5, 5), text_x=(5, 55), text_y=(300, 355), size=(-10, 10)):
     """Generates random parameters for sample images
 
     Parameters
@@ -86,10 +86,30 @@ def gen_image(img_name, path, text, params, font="AllertaStencil-Regular.ttf"):
     return
 
 
-def gen_class():
-    """Generates attributes required to images and class label"""
-    class_label = randint(0, 1)
+def gen_class(class_label=None):
+    """Generates attributes required to images and class label
+
+    Parameters
+    ----------
+    class_label: (0,1) (Optional)
+        If an integer is passed will create a class of the given label.
+        If not passed then one will randomly be generated
+
+    Returns
+    -------
+    class_label: int
+        0 for gibberish text
+        1 for correct text
+    text: str
+        Text that will be included in image
+    """
+    if class_label not in (0, 1, None):
+        raise ValueError("Classs label must be a value of 0,1 or None")
+
     template = "{0} +\n{1} = \n{2}"
+
+    if class_label is None:
+        class_label = randint(0, 1)
 
     if class_label == 0:
         # Add a happy face at the end randomly to make this more difficult
