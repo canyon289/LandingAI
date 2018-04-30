@@ -104,3 +104,5 @@ notebook/train/*
 .idea/*
 :w
 *.swp
+
+temp.jpg

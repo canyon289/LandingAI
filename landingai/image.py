@@ -140,7 +140,7 @@ def gen_images(train_examples=50, test_examples=10, delete=False):
 
 
 def check_path(dir_name, delete=False):
-    """Check if path exists and optionally deletes. Returns true if 
+    """Check if path exists and optionally deletes. Returns True if
     images should be created"""
 
     if os.path.isdir(dir_name) is True and delete is False:
